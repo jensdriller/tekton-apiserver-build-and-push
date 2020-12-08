@@ -1,6 +1,6 @@
 # git and docker access
-config/docker.yaml
-config/git.yaml
+tekton/docker.yaml
+tekton/git.yaml
 
 # go
 apiserver/vendor
