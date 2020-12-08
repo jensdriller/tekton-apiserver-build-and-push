@@ -1,0 +1,17 @@
+apiVersion: tekton.dev/v1alpha1
+kind: PipelineRun
+metadata:
+  name: apiserver
+spec:
+  serviceAccountName: build-bot
+  pipelineRef:
+    name: apiserver
+  resources: # could also use resource-ref here
+    - name: source
+      resourceSpec:
+        type: git
+        params:
+          - name: revision
+            value: master
+          - name: url
+            value: https://github.com/jensdriller/tekton-apiserver-build-and-push

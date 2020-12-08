@@ -1,0 +1,79 @@
+apiVersion: networking.istio.io/v1alpha3
+kind: Gateway
+metadata:
+  name: ingress-gateway-configuration
+spec:
+  selector:
+    istio: ingressgateway
+  servers:
+  - port:
+      number: 80
+      name: http
+      protocol: HTTP
+    hosts:
+    - "*"
+---
+kind: VirtualService
+apiVersion: networking.istio.io/v1alpha3
+metadata:
+  name: ingress
+  namespace: default
+spec: 
+  hosts:
+    - "*"
+  gateways:
+    - ingress-gateway-configuration
+  http:
+    - match:
+      - uri:
+          exact: "/test"
+      route:
+      - destination:
+          host: apiserver.default.svc.cluster.local
+          subset: stable
+    - match:
+      - uri :
+          prefix: "/kiali"
+      route:
+      - destination:
+          host: kiali.istio-system.svc.cluster.local
+    - match:
+      - uri:
+          prefix: "/grafana"
+      route:
+      - destination:
+          host: grafana.default.svc.cluster.local
+    - match:
+      - uri:
+          prefix: "/prometheus"
+      rewrite:
+        uri: /graph
+      route:
+      - destination:
+          host: prometheus-server.default.svc.cluster.local
+    - match:
+      - uri :
+          prefix: "/"
+      route:
+      - destination:
+          host: grafana.default.svc.cluster.local
+---
+kind: DestinationRule
+apiVersion: networking.istio.io/v1alpha3
+metadata:
+  name: apiserver
+  namespace: default
+spec:
+  host: apiserver
+  subsets:
+    - labels:
+        version: stable
+      name: stable
+---
+# kind: DestinationRule
+# apiVersion: networking.istio.io/v1alpha3
+# metadata:
+#   name: kiali
+#   namespace: istio-system
+# spec:
+#   host: kiali.istio-system.svc.cluster.local

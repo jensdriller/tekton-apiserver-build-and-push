@@ -1,0 +1,24 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: apiserver
+  labels:
+    app: apiserver
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: apiserver
+  template:
+    metadata:
+      labels:
+        app: apiserver
+        version: stable
+    spec:
+      containers:
+      - name: apiserver
+        image: jensdriller/tekton-test:latest
+        resources:
+          limits:
+            memory: "512Mi"
+            cpu: "1"
