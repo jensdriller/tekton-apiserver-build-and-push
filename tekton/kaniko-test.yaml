@@ -16,5 +16,5 @@ spec:
       command:
         - /kaniko/executor
         - --dockerfile=Dockerfile
-        - --context=/workspace/repo/src
+        - --context=/workspace/repo
         - --destination=jensdriller/tekton-test:latest
